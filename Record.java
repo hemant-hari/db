@@ -27,7 +27,7 @@ class Record {
         return numcols;
     }
 
-    String get(int index) {
+    String getField(int index) {
         return fields[index];
     }
 
@@ -49,6 +49,6 @@ class Record {
 
     private void testReset() {
         resetRow();
-        assert(get(1) == null);
+        assert(getField(1) == null);
     }
 }
