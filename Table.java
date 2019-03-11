@@ -1,12 +1,12 @@
 import java.util.*;
 
 class Table {
-    private Map<String, Record> table = new HashMap<String, Record>();
-    private Map<String, Integer> headers = new HashMap<String, Integer>();
+    private Map<String, Record> table = new LinkedHashMap<String, Record>();
+    private Map<String, Integer> headers = new LinkedHashMap<String, Integer>();
     private int numcols;
     private int keyindex;
 
-    Table (String key, String ... headers) {
+    void setHeaders(String key, String ... headers) {
         numcols = headers.length;
         for (int i=0; i<numcols; i++){
             this.headers.put(headers[i], i);
@@ -42,6 +42,21 @@ class Table {
         return true;
     }
 
+    void printTable(){
+        for (String element : headers.keySet()) {
+            System.out.print(String.format("%-10s %s" , element, " | " ));
+        }
+        System.out.println();
+        System.out.println();
+        for (String key : table.keySet()){
+            String[] fields = table.get(key).getAllFields();
+            for (String element : fields) {
+                System.out.print(String.format("%-10s %s" , element, " | " ));
+             }
+            System.out.println();
+        }
+    }
+
     private void checkValidField(String key_val, String column){
         if (! headers.containsKey(column)) {
             throw new Error("Mentioned header not included in list of column titles");
@@ -52,7 +67,8 @@ class Table {
     }
 
     public static void main(String[] args) {
-        Table prog = new Table("petname", "ownername", "gender", "petname");
+        Table prog = new Table();
+        prog.setHeaders("ownername", "ownername", "gender", "petname");
         prog.run();
     }
 
@@ -76,11 +92,12 @@ class Table {
         System.out.println(getField("Amy", "petname"));
         System.out.println(getField("Amy", "gender"));
         */
-        System.out.println(getField("Bruno", "ownername"));
+        System.out.println(getField("Amy", "petname"));
     }
 
     private void testModifyRecord() {
-        assert(modifyRecord("Bruno", "ownername", "Vineeth"));
-        System.out.println(getField("Bruno", "ownername"));
+        assert(modifyRecord("Amy", "petname", "Brig"));
+        System.out.println(getField("Amy", "petname"));
+        printTable();
     }
 }

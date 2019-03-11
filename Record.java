@@ -31,6 +31,10 @@ class Record {
         return fields[index];
     }
 
+    String[] getAllFields() {
+        return fields;
+    }
+
     public static void main(String[] args) {
         Record prog = new Record(5);
         prog.run();
