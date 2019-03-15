@@ -2,13 +2,20 @@ import java.util.*;
 
 class Db {
     private Map<String, Table> database = new LinkedHashMap<String, Table>();
+    private Table currTable;
 
     void addTable(String name){
         database.put(name, new Table());
     }
 
-    void loadTable(String tablename, String filedir){
-        Reader rdr = new Reader(database.get(tablename));
+    void printTableNames() {
+        for (String key : database.keySet()) {
+            System.out.println(key);
+        }
+    }
+
+    void loadTable(String filedir){
+        Reader rdr = new Reader(currTable);
         rdr.readFile(filedir);
     }
 
@@ -16,24 +23,27 @@ class Db {
         database.get(tablename).printTable();
     }
 
-    boolean keyExists(String tablename, String stringToCheck){
-        return database.get(tablename).checkKey(stringToCheck);
+    void setTable(String tablename){
+        currTable = database.get(tablename);
     }
 
-    boolean tableContains(String tablename, String column, String value) {
-        return database.get(tablename).columnContains(column, value);
+    boolean keyExists(String stringToCheck){
+        return currTable.checkKey(stringToCheck);
     }
 
-    Set<String> keysWhichContain(String tablename, String column, String value) {
-        return database.get(tablename).keysWhichContain(column, value);
+    boolean tableContains(String column, String value) {
+        return currTable.columnContains(column, value);
     }
 
-    void modifyEntry(String tablename, String key, String column, String new_val) {
-        database.get(tablename).modifyRecord(key, column, new_val);
+    Set<String> keysWhichContain(String column, String value) {
+        return currTable.keysWhichContain(column, value);
     }
 
-    void displaySubset(String tablename, Set<String> keySubset) {
-        Table currTable = database.get(tablename);
+    void modifyEntry(String key, String column, String new_val) {
+        currTable.modifyRecord(key, column, new_val);
+    }
+
+    void displaySubset(Set<String> keySubset) {
         currTable.printHeaders();
         for (String key : keySubset){
             currTable.printField(key);
@@ -47,9 +57,12 @@ class Db {
     }
 
     private void run() {
+        printTableNames();
         addTable("pets");
-        loadTable("pets", "testdb.txt");
+        printTableNames();
+        setTable("pets");
+        loadTable("testdb.txt");
         showTable("pets");
-        displaySubset("pets", keysWhichContain("pets","pgender", "M"));
+        displaySubset(keysWhichContain("pgender", "M"));
     }
 }
