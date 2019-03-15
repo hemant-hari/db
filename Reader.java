@@ -8,7 +8,7 @@ class Reader {
         this.wtable = writeTable;
     }
 
-    void ReadFile(String filedir) {
+    void readFile(String filedir) {
         try {
             File file = new File(filedir);
             Scanner sc = new Scanner(file);
@@ -18,7 +18,7 @@ class Reader {
 
             while(sc.hasNextLine()){
                 if(!wtable.addRecord(sc.nextLine().split(","))){
-                    throw new Error("Error adding record from file!");
+                    throw new Error("Error adding record from file! (Duplicate key or incorrect number of columns)");
                 }
             }
         } catch (FileNotFoundException e) {
@@ -36,7 +36,8 @@ class Reader {
     }
 
     private void run() {
-        ReadFile("/home/msc18/hh15312/linux/jcourse/db/testdb.txt");
+        readFile("testdb.txt");
         wtable.printTable();
+        System.out.println(wtable.columnContains("petname", "Duke"));
     }
 }

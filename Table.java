@@ -42,19 +42,53 @@ class Table {
         return true;
     }
 
+    boolean checkKey(String key) {
+        return table.containsKey(key);
+    }
+
+    //The if statement gets the Record and then finds the column index using
+    //the headers map
+    boolean columnContains(String column, String value) {
+        for (String key : table.keySet()){
+            if (value.equals(table.get(key).getField(headers.get(column)))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    Set keysWhichContain(String column, String value) {
+        Set<String> retSet = new LinkedHashSet<String>();
+        for (String key : table.keySet()){
+            if (value.equals(table.get(key).getField(headers.get(column)))){
+                retSet.add(key);
+            }
+        }
+        return retSet;
+    }
+
     void printTable(){
+        printHeaders();
+        for (String key : table.keySet()){
+            printField(key);
+        }
+        System.out.println();
+    }
+
+    void printHeaders(){
         for (String element : headers.keySet()) {
             System.out.print(String.format("%-10s %s" , element, " | " ));
         }
         System.out.println();
         System.out.println();
-        for (String key : table.keySet()){
-            String[] fields = table.get(key).getAllFields();
-            for (String element : fields) {
-                System.out.print(String.format("%-10s %s" , element, " | " ));
-             }
-            System.out.println();
-        }
+    }
+
+    void printField(String key) {
+        String[] fields = table.get(key).getAllFields();
+        for (String element : fields) {
+            System.out.print(String.format("%-10s %s" , element, " | " ));
+         }
+        System.out.println();
     }
 
     private void checkValidField(String key_val, String column){
