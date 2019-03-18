@@ -79,6 +79,7 @@ class Db {
         int numtables = rdr.numTables(dbname);
         if (numtables == 0) { throw new Error("No tables in directory"); }
         database.clear();
+        currTable = null;
         for (int i=0; i<numtables; i++) {
             Table tbl = new Table();
             rdr.setTable(tbl);
@@ -99,7 +100,11 @@ class Db {
         saveDB("testingdb");
         Reader rdr = new Reader(null);
         assert(rdr.numTables("testingdb") == 1);
-        loadDB("testingdb0");
+        loadDB("testingdb");
         assert(getTableNames().length == 1);
+        setTable("pets");
+        addColumn("type");
+        showTable("pets");
+        saveDB("testingdb");
     }
 }

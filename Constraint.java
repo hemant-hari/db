@@ -1,0 +1,5 @@
+enum Constraint {
+
+    FK, Int;
+
+}

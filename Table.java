@@ -3,6 +3,8 @@ import java.util.*;
 class Table {
     private Map<String, Record> table = new LinkedHashMap<String, Record>();
     private Map<String, Integer> headers = new LinkedHashMap<String, Integer>();
+    private Map<String, Set<Constraint>> colconstraints = new LinkedHashMap<String, Set<Constraint>>();
+    private Map<String, FKConstraint> fkconstraints = new LinkedHashMap<String, FKConstraint>();
     private String key_col;
     private int numcols;
     private int keyindex;
@@ -22,12 +24,30 @@ class Table {
         }
     }
 
+    void setFKConstraint(String colname, Table ftable, String ftbl_col){
+        if (!ftable.getKeyCol().equals(ftbl_col)){
+            throw new Error("Foreign Key must be primary key in foreign table!")
+        }
+        setConstraint(colname, Constraint.FK);
+        fkconstraints.put(colname, new FKConstraint(ftable, ftbl_col));
+    }
+
+    void setConstraint(String colname, Constraint constr) {
+        if (!table.isEmpty()){
+            throw new Error("Tried to set constraints on table which is not empty!");
+        }
+        colconstraints.putIfAbsent(colname, new LinkedHashSet<Constraint>());
+        colconstraints.get(colname).add(constr);
+    }
+
     String getKeyCol() {
         return key_col;
     }
 
     void addCol(String headername) {
-        headers.put(headername, numcols);
+        if (headers.putIfAbsent(headername, numcols) != null){
+            throw new Error("Column already exists!");
+        }
         numcols++;
         for (String key : table.keySet()) {
             table.replace(key, table.get(key).addField());
@@ -43,6 +63,7 @@ class Table {
         Record r = new Record(numcols);
         if (fields.length != numcols){ return false; }
         if (table.containsKey(fields[keyindex])) { return false; }
+        checkConstraints(fields);
         r.setRow(fields);
         table.put(fields[keyindex], r);
         return true;
@@ -94,6 +115,37 @@ class Table {
         return table.keySet();
     }
 
+    private void checkConstraints(String[] fields) {
+        if (colconstraints == null) return;
+        for (String header : colconstraints.keySet()) {
+            Set<Constraint> constr = colconstraints.get(header);
+            for (Constraint c : constr) {
+                switch(c){
+                    case Int:
+                        intConstr(fields, header);
+                    case FK:
+                        FKConstr(fields, header);
+                }
+            }
+        }
+    }
+
+    private void FKConstr(String[] fields, String constrheader){
+        FKConstraint fkc = fkconstraints.get(constrheader);
+        String constr_val = fields[headers.get(constrheader)];
+        if (!fkc.getFTable().checkKey(constr_val)){
+            
+        }
+    }
+
+    private void intConstr(String[] fields, String constrheader){
+        try {
+            Integer.parseInt(fields[headers.get(constrheader)]);
+        } catch (NumberFormatException e) {
+            throw new Error("Non-integer input in integer constrained column");
+        }
+    }
+
     private void checkValidField(String key_val, String column){
         if (! headers.containsKey(column)) {
             throw new Error("Mentioned header not included in list of column titles");
@@ -105,21 +157,22 @@ class Table {
 
     public static void main(String[] args) {
         Table prog = new Table();
-        prog.setHeaders("ownername", "ownername", "gender", "petname");
+        prog.setHeaders("ownername", "ownername", "gender", "petname", "id");
         prog.run();
     }
 
     private void run () {
+        setConstraint("id", Constraint.Int);
         testRecordAdd();
         testGet();
         testModifyRecord();
     }
 
     private void testRecordAdd() {
-        assert(addRecord("Hemant", "M", "Bruno"));
-        assert(addRecord("Amy", "F", "Brigitte"));
-        assert(addRecord("Bob", "M", "Ruby"));
-        assert(!addRecord("Oh no!", "Bob", "M", "Ruby"));
+        assert(addRecord("Hemant", "M", "Bruno","1"));
+        assert(addRecord("Amy", "F", "Brigitte","2"));
+        assert(addRecord("Bob", "M", "Ruby","3"));
+        assert(!addRecord("Oh no!", "Bob", "M", "4", "God dangit"));
     }
 
     private void testGet() {
