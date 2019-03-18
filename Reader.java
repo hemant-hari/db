@@ -8,6 +8,12 @@ class Reader {
         this.wtable = writeTable;
     }
 
+    int numTables(String DBname) {
+        File f = new File("dbstorage/" + DBname + "/");
+        File[] filelist = f.listFiles();
+        return filelist.length;
+    }
+
     String readFile(String filedir) {
         try {
             File file = new File(filedir);
@@ -30,7 +36,7 @@ class Reader {
         }
     }
 
-    void changeTable(Table newTable) {
+    void setTable(Table newTable) {
         wtable = newTable;
     }
 

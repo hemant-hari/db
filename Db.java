@@ -67,7 +67,15 @@ class Db {
     }
 
     void loadDB(String dbname) {
-        loadTable(dbname + "/tbl" + )
+        Reader rdr = new Reader(null);
+        int numtables = rdr.numTables(dbname);
+        if (numtables == 0) { throw new Error("No tables in directory"); }
+        database.clear();
+        for (int i=0; i<numtables; i++) {
+            Table tbl = new Table();
+            rdr.setTable(tbl);
+            database.put(rdr.readFile("dbstorage/" + dbname + "/tbl" + i), tbl);
+        }
     }
 
     public static void main(String[] args) {
@@ -81,5 +89,9 @@ class Db {
         showTable("pets");
         displaySubset(recordsWhichContain("pgender", "M"));
         saveDB("testingdb");
+        Reader rdr = new Reader(null);
+        assert(rdr.numTables("testingdb") == 1);
+        loadDB("testingdb0");
+        assert(getTableNames().length == 1);
     }
 }
