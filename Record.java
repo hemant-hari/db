@@ -7,6 +7,14 @@ class Record {
         fields =  new String[numcols];
     }
 
+    Record addField() {
+        Record rsz = new Record(numcols+1);
+        for (int i=0; i<numcols; i++){
+            rsz.fields[i] = fields[i];
+        }
+        return rsz;
+    }
+
     void resetRow() {
         for (int i=0; i<numcols; i++) {
             fields[i] = null;

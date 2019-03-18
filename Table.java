@@ -26,6 +26,14 @@ class Table {
         return key_col;
     }
 
+    void addCol(String headername) {
+        headers.put(headername, numcols);
+        numcols++;
+        for (String key : table.keySet()) {
+            table.replace(key, table.get(key).addField());
+        }
+    }
+
     String getField(String key_val, String column) {
         checkValidField(key_val, column);
         return table.get(key_val).getField(headers.get(column));

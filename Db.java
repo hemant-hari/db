@@ -13,6 +13,14 @@ class Db {
         database.put(name, new Table());
     }
 
+    void addEntry(String ... fields) {
+        currTable.addRecord(fields);
+    }
+
+    void addColumn(String headername) {
+        currTable.addCol(headername);
+    }
+
     String[] getTableNames() {
         Set<String> tblnames = database.keySet();
         return tblnames.toArray(new String[tblnames.size()]);
