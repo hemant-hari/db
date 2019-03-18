@@ -8,12 +8,13 @@ class Reader {
         this.wtable = writeTable;
     }
 
-    void readFile(String filedir) {
+    String readFile(String filedir) {
         try {
             File file = new File(filedir);
             Scanner sc = new Scanner(file);
+            String tablename = sc.nextLine();
             String key = sc.nextLine();
-            String[] headers = sc.nextLine().split(", ");
+            String[] headers = sc.nextLine().split(",");
             wtable.setHeaders(key, headers);
 
             while(sc.hasNextLine()){
@@ -21,8 +22,11 @@ class Reader {
                     throw new Error("Error adding record from file! (Duplicate key or incorrect number of columns)");
                 }
             }
+            return tablename;
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -37,7 +41,6 @@ class Reader {
 
     private void run() {
         readFile("testdb.txt");
-        wtable.printTable();
         System.out.println(wtable.columnContains("petname", "Duke"));
     }
 }

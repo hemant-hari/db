@@ -3,28 +3,36 @@ import java.util.*;
 class Db {
     private Map<String, Table> database = new LinkedHashMap<String, Table>();
     private Table currTable;
+    private Display dsp;
+
+    Db() {
+        dsp = new Display();
+    }
 
     void addTable(String name){
         database.put(name, new Table());
     }
 
-    void printTableNames() {
-        for (String key : database.keySet()) {
-            System.out.println(key);
-        }
+    String[] getTableNames() {
+        Set<String> tblnames = database.keySet();
+        return tblnames.toArray(new String[tblnames.size()]);
     }
 
+    //readFile returns the tablename
     void loadTable(String filedir){
-        Reader rdr = new Reader(currTable);
-        rdr.readFile(filedir);
+        Table tbl = new Table();
+        Reader rdr = new Reader(tbl);
+        database.put(rdr.readFile(filedir), tbl);
     }
 
     void showTable(String tablename){
-        database.get(tablename).printTable();
+        dsp.setTable(database.get(tablename));
+        dsp.displayTable();
     }
 
     void setTable(String tablename){
         currTable = database.get(tablename);
+        dsp.setTable(currTable);
     }
 
     boolean keyExists(String stringToCheck){
@@ -35,7 +43,7 @@ class Db {
         return currTable.columnContains(column, value);
     }
 
-    Set<String> keysWhichContain(String column, String value) {
+    Set<String> recordsWhichContain(String column, String value) {
         return currTable.keysWhichContain(column, value);
     }
 
@@ -44,11 +52,22 @@ class Db {
     }
 
     void displaySubset(Set<String> keySubset) {
-        currTable.printHeaders();
-        for (String key : keySubset){
-            currTable.printField(key);
+        dsp.displaySubset(keySubset);
+    }
+
+    void saveDB(String dbname) {
+        DiskWriter writer = new DiskWriter();
+        int i=0;
+        writer.makeDBdir(dbname);
+        writer.setDB(dbname);
+        for (String tblname : database.keySet()){
+            writer.saveTable(database.get(tblname), tblname, i);
+            i++;
         }
-        System.out.println();
+    }
+
+    void loadDB(String dbname) {
+        loadTable(dbname + "/tbl" + )
     }
 
     public static void main(String[] args) {
@@ -57,12 +76,10 @@ class Db {
     }
 
     private void run() {
-        printTableNames();
-        addTable("pets");
-        printTableNames();
-        setTable("pets");
         loadTable("testdb.txt");
+        setTable("pets");
         showTable("pets");
-        displaySubset(keysWhichContain("pgender", "M"));
+        displaySubset(recordsWhichContain("pgender", "M"));
+        saveDB("testingdb");
     }
 }

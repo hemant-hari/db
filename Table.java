@@ -3,6 +3,7 @@ import java.util.*;
 class Table {
     private Map<String, Record> table = new LinkedHashMap<String, Record>();
     private Map<String, Integer> headers = new LinkedHashMap<String, Integer>();
+    private String key_col;
     private int numcols;
     private int keyindex;
 
@@ -14,10 +15,15 @@ class Table {
                 keyindex = i;
             }
         }
+        key_col = key;
 
         if (! this.headers.containsKey(key)){
             throw new Error("Mentioned key not included in list of column titles");
         }
+    }
+
+    String getKeyCol() {
+        return key_col;
     }
 
     String getField(String key_val, String column) {
@@ -57,7 +63,7 @@ class Table {
         return false;
     }
 
-    Set keysWhichContain(String column, String value) {
+    Set<String> keysWhichContain(String column, String value) {
         Set<String> retSet = new LinkedHashSet<String>();
         for (String key : table.keySet()){
             if (value.equals(table.get(key).getField(headers.get(column)))){
@@ -67,28 +73,17 @@ class Table {
         return retSet;
     }
 
-    void printTable(){
-        printHeaders();
-        for (String key : table.keySet()){
-            printField(key);
-        }
-        System.out.println();
+    String[] getHeaders(){
+        Set<String> ks = headers.keySet();
+        return ks.toArray(new String[ks.size()]);
     }
 
-    void printHeaders(){
-        for (String element : headers.keySet()) {
-            System.out.print(String.format("%-10s %s" , element, " | " ));
-        }
-        System.out.println();
-        System.out.println();
+    String[] getRecord(String key) {
+        return table.get(key).getAllFields();
     }
 
-    void printField(String key) {
-        String[] fields = table.get(key).getAllFields();
-        for (String element : fields) {
-            System.out.print(String.format("%-10s %s" , element, " | " ));
-         }
-        System.out.println();
+    Set<String> getAllKeys() {
+        return table.keySet();
     }
 
     private void checkValidField(String key_val, String column){
@@ -132,6 +127,5 @@ class Table {
     private void testModifyRecord() {
         assert(modifyRecord("Amy", "petname", "Brig"));
         System.out.println(getField("Amy", "petname"));
-        printTable();
     }
 }
