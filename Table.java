@@ -26,7 +26,7 @@ class Table {
 
     void setFKConstraint(String colname, Table ftable, String ftbl_col){
         if (!ftable.getKeyCol().equals(ftbl_col)){
-            throw new Error("Foreign Key must be primary key in foreign table!")
+            throw new Error("Foreign Key must be primary key in foreign table!");
         }
         setConstraint(colname, Constraint.FK);
         fkconstraints.put(colname, new FKConstraint(ftable, ftbl_col));
@@ -123,8 +123,10 @@ class Table {
                 switch(c){
                     case Int:
                         intConstr(fields, header);
+                        break;
                     case FK:
                         FKConstr(fields, header);
+                        break;
                 }
             }
         }
@@ -134,7 +136,7 @@ class Table {
         FKConstraint fkc = fkconstraints.get(constrheader);
         String constr_val = fields[headers.get(constrheader)];
         if (!fkc.getFTable().checkKey(constr_val)){
-            
+            throw new Error("Foreign Key constraint violation!");
         }
     }
 

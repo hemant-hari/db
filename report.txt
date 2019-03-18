@@ -1,0 +1,85 @@
+Though not included within this submission, the history of the project and its
+progression may be seen on github at the url:-
+
+https://github.com/hemant-hari/db
+
+This report follows along with the commit timeline of the github repo, but
+it is not necessary to visit the repo to follow along with the report. Each
+update generally fixes bugs and syntax errors which are omitted in this report.
+
+--------------------------------------------------------------------------------
+
+Initial commit and first real progress is the start of the Record Class.
+It has a few rudimentary methods. Field values may be set, and the constructor
+requires mentioning how many values are stored in one record. Record is
+essentially a wrapper for an Array of Strings.
+
+--------------------------------------------------------------------------------
+
+Second major commit added more functionality to the Record Class and introduced
+the Table Class. Functionality added to the Record Class includes a reset
+method and a setField method which allows for the setting of the value of a
+singular field.
+
+The Table Class is a wrapper for a Map of multiple Records. Initial methods
+are simply setting a primary key and header names as well as adding of a Record
+to the Table.
+
+--------------------------------------------------------------------------------
+
+More functionality is added to the Table Class. Method to modify Records using
+column names is added. Another utility function for checking valid column names
+is added as well.
+
+--------------------------------------------------------------------------------
+
+Created the Reader Class to read in a table from a text file. The format of the
+read-in file is set as well. The first line in the file reads in the key name,
+the second line reads in the header names. All subsequent lines read in values
+to the created table.
+
+Record has a method added to get all fields inside it.
+
+Table is modified to add printing functionality. The Table Class is also changed
+such that the Headers are no longer set in the constructor, but using a separate
+setter method.
+
+--------------------------------------------------------------------------------
+
+A Db Class is made next. This Class is used to interface with the Table and
+Reader Classes. Contains some additional methods which allow for searching a
+column in a Table as well as displaying a subset of a Table.
+
+--------------------------------------------------------------------------------
+
+Refactored the Db Class to have a global 'Current Table' field. Now the Class
+uses a setTable command followed by the execution of other commands. This was
+a design choice to reduce 'bulkiness' of the function calls.
+
+--------------------------------------------------------------------------------
+
+Initial Database saving functionality added. Still barebones and not complete.
+Some bugs remain.
+
+--------------------------------------------------------------------------------
+
+Saving and loading framework completed. This constitutes a completion of the
+main assignment objectives.
+
+The syntax for saved files is changed slightly. The first line of the saved
+files is now the table name, followed by all previous information.
+
+--------------------------------------------------------------------------------
+
+Methods for adding a new column are added.
+
+--------------------------------------------------------------------------------
+
+Added functionality for constraints and types. Though Foreign Key and Integer
+constraints were added, the introduction of Foreign Key Constraints required
+introduction of cyclic dependencies. The program is entirely functional without
+these, but for the introduction of FK constraints according to my thought
+process there was a requirement for cyclic dependencies.
+
+--------------------------------------------------------------------------------
+#####################################END########################################

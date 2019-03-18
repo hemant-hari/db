@@ -1,0 +1,9 @@
+pets
+id
+ownername~FK~owners~ownername,petname,pgender,id~Int,
+Amy,Brig,F,1,
+Bob,Duke,M,2,
+Charlie,Einstein,M,3,
+Daniella,Cujo,M,4,
+Esther,Calvin,M,5,
+Farai,Lulu,F,6,

@@ -1,9 +1,9 @@
 pets
 ownername
-ownername,ogender,petname,pgender,type,
-Amy,F,Brig,F,null,
-Bob,M,Duke,M,null,
-Charlie,M,Einstein,M,null,
-Daniella,F,Cujo,M,null,
-Esther,F,Calvin,M,null,
-Farai,M,Lulu,F,null,
+ownername,ogender,petname,pgender,id,
+Amy,F,Brig,F,1,
+Bob,M,Duke,M,2,
+Charlie,M,Einstein,M,3,
+Daniella,F,Cujo,M,4,
+Esther,F,Calvin,M,5,
+Farai,M,Lulu,F,6,

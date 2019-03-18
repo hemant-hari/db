@@ -21,6 +21,10 @@ class Db {
         currTable.addCol(headername);
     }
 
+    Table getTable(String tablename) {
+        return database.get(tablename);
+    }
+
     String[] getTableNames() {
         Set<String> tblnames = database.keySet();
         return tblnames.toArray(new String[tblnames.size()]);
@@ -76,6 +80,7 @@ class Db {
 
     void loadDB(String dbname) {
         Reader rdr = new Reader(null);
+        rdr.setDB(this);
         int numtables = rdr.numTables(dbname);
         if (numtables == 0) { throw new Error("No tables in directory"); }
         database.clear();
@@ -106,5 +111,8 @@ class Db {
         addColumn("type");
         showTable("pets");
         saveDB("testingdb");
+        loadDB("fktestingdb");
+        showTable("owners");
+        showTable("pets");
     }
 }
